@@ -253,7 +253,7 @@
     </form>
     <p class="hero-note">No spam. Just a heads-up when we launch.</p>
     <div class="success-msg" id="hero-success">🌿 You're on the list! We'll be in touch.</div>
-    <div class="error-msg" id="hero-error">Something went wrong — please try again.</div>
+    <div class="error-msg" id="hero-error"></div>
   </section>
 
   <!-- APP PREVIEW WITH PHONE MOCKUPS -->
@@ -444,7 +444,7 @@
     </form>
     <p class="signup-note reveal">We'll never share your details. Unsubscribe any time.</p>
     <div class="success-msg" id="bottom-success">🌿 You're on the list! We'll be in touch very soon.</div>
-    <div class="error-msg" id="bottom-error">Something went wrong — please try again.</div>
+    <div class="error-msg" id="bottom-error"></div>
   </section>
 
   <!-- FOOTER -->
@@ -478,10 +478,16 @@
     const SUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/julita.romero@gmail.com';
     const EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
+    const isLocal = location.protocol === 'file:';
+
     function showError(formId, btn, label) {
       btn.disabled = false;
       btn.textContent = label;
-      document.getElementById(formId + '-error').style.display = 'block';
+      const el = document.getElementById(formId + '-error');
+      el.textContent = isLocal
+        ? '⚠️ Form submissions are disabled when previewing locally. This will work once the page is live.'
+        : 'Something went wrong — please try again.';
+      el.style.display = 'block';
     }
 
     async function handleSignup(e, formId) {
