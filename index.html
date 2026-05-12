@@ -57,6 +57,7 @@
     .hero-form button:hover { background: var(--moss); transform: translateY(-1px); }
     .hero-note { font-size: 12px; color: var(--muted); margin-top: 12px; position: relative; z-index: 1; animation: fadeUp 0.6s 0.35s ease both; }
     .success-msg { display: none; background: rgba(127,176,105,0.12); border: 1px solid rgba(127,176,105,0.3); border-radius: 12px; padding: 14px 20px; color: var(--sage); font-size: 15px; font-weight: 600; margin-top: 16px; text-align: center; }
+    .error-msg { display: none; background: rgba(224,92,92,0.1); border: 1px solid rgba(224,92,92,0.3); border-radius: 12px; padding: 12px 20px; color: #e05c5c; font-size: 14px; font-weight: 500; margin-top: 12px; text-align: center; }
     .hero-visual { margin-top: 60px; position: relative; z-index: 1; display: flex; justify-content: center; animation: fadeUp 0.8s 0.4s ease both; }
     .score-strip { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .score-pill { background: var(--white); border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04); }
@@ -252,6 +253,7 @@
     </form>
     <p class="hero-note">No spam. Just a heads-up when we launch.</p>
     <div class="success-msg" id="hero-success">🌿 You're on the list! We'll be in touch.</div>
+    <div class="error-msg" id="hero-error">Something went wrong — please try again.</div>
   </section>
 
   <!-- APP PREVIEW WITH PHONE MOCKUPS -->
@@ -442,6 +444,7 @@
     </form>
     <p class="signup-note reveal">We'll never share your details. Unsubscribe any time.</p>
     <div class="success-msg" id="bottom-success">🌿 You're on the list! We'll be in touch very soon.</div>
+    <div class="error-msg" id="bottom-error">Something went wrong — please try again.</div>
   </section>
 
   <!-- FOOTER -->
@@ -472,22 +475,30 @@
     });
 
     // Signup
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/julita.romero@gmail.com';
-
+    const SUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/julita.romero@gmail.com';
     const EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+    function showError(formId, btn, label) {
+      btn.disabled = false;
+      btn.textContent = label;
+      document.getElementById(formId + '-error').style.display = 'block';
+    }
 
     async function handleSignup(e, formId) {
       e.preventDefault();
-      const form      = e.target;
-      const btn       = form.querySelector('button');
-      const emailEl   = document.getElementById(formId === 'hero' ? 'hero-email' : 'bottom-email');
-      const email     = emailEl.value.trim();
-      const name      = (document.getElementById(formId === 'hero' ? 'hero-name' : 'bottom-name').value || '').trim();
+      const form    = e.target;
+      const btn     = form.querySelector('button');
+      const btnLabel = btn.textContent;
+      const emailEl = document.getElementById(formId === 'hero' ? 'hero-email' : 'bottom-email');
+      const email   = emailEl.value.trim();
+      const name    = (document.getElementById(formId === 'hero' ? 'hero-name' : 'bottom-name').value || '').trim();
+
+      // Hide any previous error
+      document.getElementById(formId + '-error').style.display = 'none';
 
       if (!EMAIL_RE.test(email)) {
         emailEl.style.borderColor = '#e05c5c';
         emailEl.focus();
-        emailEl.placeholder = 'Please enter a valid email';
         emailEl.addEventListener('input', () => { emailEl.style.borderColor = ''; }, { once: true });
         return;
       }
@@ -496,23 +507,20 @@
       btn.textContent = 'Sending…';
 
       try {
-        const res = await fetch(FORMSPREE_ENDPOINT, {
+        const res = await fetch(SUBMIT_ENDPOINT, {
           method: 'POST',
           headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, _subject: 'New Care Loop early access signup' })
+          body: JSON.stringify({ name, email, _subject: 'New Care Loop early access signup', _captcha: 'false' })
         });
-        if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success === 'true') {
           document.getElementById(formId + '-success').style.display = 'block';
           form.style.display = 'none';
         } else {
-          btn.disabled = false;
-          btn.textContent = formId === 'hero' ? 'Get early access →' : 'Count me in →';
-          alert('Something went wrong — please try again.');
+          showError(formId, btn, btnLabel);
         }
       } catch (err) {
-        btn.disabled = false;
-        btn.textContent = formId === 'hero' ? 'Get early access →' : 'Count me in →';
-        alert('Something went wrong — please try again.');
+        showError(formId, btn, btnLabel);
       }
     }
   </script>
