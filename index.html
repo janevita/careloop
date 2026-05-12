@@ -50,7 +50,7 @@
     h1 em { font-style: normal; color: var(--forest); }
     .hero-sub { font-size: clamp(17px,2.2vw,21px); color: var(--muted); max-width: 520px; margin: 20px auto 0; position: relative; z-index: 1; animation: fadeUp 0.6s 0.2s ease both; }
     .hero-form { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 40px; position: relative; z-index: 1; animation: fadeUp 0.6s 0.3s ease both; }
-    .hero-form input { flex: 1; min-width: 240px; max-width: 320px; padding: 14px 20px; border: 1.5px solid var(--sand); border-radius: 50px; font-size: 15px; background: var(--white); color: var(--charcoal); outline: none; transition: border-color 0.2s; }
+    .hero-form input { flex: 1; min-width: 200px; max-width: 280px; padding: 14px 20px; border: 1.5px solid var(--sand); border-radius: 50px; font-size: 15px; background: var(--white); color: var(--charcoal); outline: none; transition: border-color 0.2s; }
     .hero-form input:focus { border-color: var(--sage); }
     .hero-form input::placeholder { color: #A8B8A4; }
     .hero-form button { background: var(--forest); color: var(--white); border: none; border-radius: 50px; padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
@@ -245,20 +245,13 @@
     <div class="hero-badge"><div class="hero-badge-dot"></div>Coming soon — be the first to know</div>
     <h1>Know what you own.<br><em>Own what you know.</em></h1>
     <p class="hero-sub">Scan any product — food, beauty, clothing, electronics — and instantly see how it scores across health, planet, ethics, and longevity.</p>
-    <form class="hero-form" onsubmit="handleSignup(event,'hero')">
-      <input type="email" placeholder="Your email address" required id="hero-email">
+    <form class="hero-form" onsubmit="handleSignup(event,'hero')" novalidate>
+      <input type="text" placeholder="Your name" id="hero-name">
+      <input type="email" placeholder="Your email address" id="hero-email" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
       <button type="submit">Get early access →</button>
     </form>
     <p class="hero-note">No spam. Just a heads-up when we launch.</p>
     <div class="success-msg" id="hero-success">🌿 You're on the list! We'll be in touch.</div>
-    <div class="hero-visual">
-      <div class="score-strip">
-        <div class="score-pill"><div class="score-pill-dot" style="background:#4CAF50;"></div><span class="score-pill-label">Health</span><span class="score-pill-val" style="color:#4CAF50;">82</span></div>
-        <div class="score-pill"><div class="score-pill-dot" style="background:#64B5F6;"></div><span class="score-pill-label">Planet</span><span class="score-pill-val" style="color:#64B5F6;">68</span></div>
-        <div class="score-pill"><div class="score-pill-dot" style="background:#FFB74D;"></div><span class="score-pill-label">Ethics</span><span class="score-pill-val" style="color:#FFB74D;">61</span></div>
-        <div class="score-pill"><div class="score-pill-dot" style="background:#CE93D8;"></div><span class="score-pill-label">Longevity</span><span class="score-pill-val" style="color:#CE93D8;">88</span></div>
-      </div>
-    </div>
   </section>
 
   <!-- APP PREVIEW WITH PHONE MOCKUPS -->
@@ -442,9 +435,9 @@
     <div class="signup-count reveal"><span>🌱</span> Join the early access list</div>
     <h2 class="section-title reveal">Be the first to use Care Loop.</h2>
     <p class="section-sub reveal">We're building in the open and launching soon. Sign up and we'll reach out before anyone else.</p>
-    <form class="signup-form reveal" onsubmit="handleSignup(event,'bottom')">
-      <input type="text" placeholder="First name" id="bottom-name">
-      <input type="email" placeholder="Email address" required id="bottom-email">
+    <form class="signup-form reveal" onsubmit="handleSignup(event,'bottom')" novalidate>
+      <input type="text" placeholder="Your name" id="bottom-name">
+      <input type="email" placeholder="Email address" id="bottom-email" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
       <button type="submit">Count me in →</button>
     </form>
     <p class="signup-note reveal">We'll never share your details. Unsubscribe any time.</p>
@@ -479,19 +472,48 @@
     });
 
     // Signup
-    function handleSignup(e, formId) {
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/julita.romero@gmail.com';
+
+    const EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+    async function handleSignup(e, formId) {
       e.preventDefault();
-      const email = document.getElementById(formId === 'hero' ? 'hero-email' : 'bottom-email').value;
-      const name  = formId === 'bottom' ? document.getElementById('bottom-name').value : '';
-      saveSignup(name, email);
-      document.getElementById(formId + '-success').style.display = 'block';
-      e.target.style.display = 'none';
-    }
-    function saveSignup(name, email) {
-      const list = JSON.parse(localStorage.getItem('careloop_signups') || '[]');
-      list.push({ name, email, date: new Date().toISOString() });
-      localStorage.setItem('careloop_signups', JSON.stringify(list));
-      // TODO: replace with your Mailchimp / ConvertKit / Formspree endpoint
+      const form      = e.target;
+      const btn       = form.querySelector('button');
+      const emailEl   = document.getElementById(formId === 'hero' ? 'hero-email' : 'bottom-email');
+      const email     = emailEl.value.trim();
+      const name      = (document.getElementById(formId === 'hero' ? 'hero-name' : 'bottom-name').value || '').trim();
+
+      if (!EMAIL_RE.test(email)) {
+        emailEl.style.borderColor = '#e05c5c';
+        emailEl.focus();
+        emailEl.placeholder = 'Please enter a valid email';
+        emailEl.addEventListener('input', () => { emailEl.style.borderColor = ''; }, { once: true });
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, _subject: 'New Care Loop early access signup' })
+        });
+        if (res.ok) {
+          document.getElementById(formId + '-success').style.display = 'block';
+          form.style.display = 'none';
+        } else {
+          btn.disabled = false;
+          btn.textContent = formId === 'hero' ? 'Get early access →' : 'Count me in →';
+          alert('Something went wrong — please try again.');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = formId === 'hero' ? 'Get early access →' : 'Count me in →';
+        alert('Something went wrong — please try again.');
+      }
     }
   </script>
 </body>
