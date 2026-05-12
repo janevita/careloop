@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Conscio App Mockup",
+  "schemaVersion": 1,
+  "description": "Interactive mobile app mockup for Conscio — a conscious consumption app. Shows 6 clickable screens: Home/Scan, Conscious Index result, Alternatives, Care Hub, Community, and My Impact."
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conscio — App Mockup</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #E4EDE0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 20px 16px;
+  }
+  .page-title { font-size: 12px; font-weight: 700; color: #2D5A27; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .page-sub { font-size: 11px; color: #7A9E7E; margin-bottom: 20px; }
+
+  /* Screen nav pills */
+  .screen-nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+  .screen-pill {
+    font-size: 10px; font-weight: 600; padding: 5px 12px; border-radius: 20px;
+    cursor: pointer; border: 1.5px solid #C5D8C0; background: #fff; color: #4A7C59;
+    transition: all 0.15s;
+  }
+  .screen-pill.active { background: #1E4D2B; color: #fff; border-color: #1E4D2B; }
+
+  /* Phone */
+  .phone {
+    width: 300px; height: 600px; background: #1A2E1F;
+    border-radius: 42px; padding: 12px;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.32), 0 0 0 1px rgba(255,255,255,0.07);
+  }
+  .phone-screen {
+    width: 100%; height: 100%; background: #F5F0E8;
+    border-radius: 32px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .status-bar { background: #1E4D2B; padding: 5px 14px; display: flex; justify-content: space-between; flex-shrink: 0; }
+  .status-bar span { color: #fff; font-size: 10px; font-weight: 600; }
+  .top-nav { background: #1E4D2B; padding: 7px 14px 9px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .app-logo { color: #fff; font-size: 16px; font-weight: 700; }
+  .app-logo em { color: #7FB069; font-style: normal; }
+
+  .screen { flex: 1; overflow-y: auto; padding: 12px; display: none; flex-direction: column; gap: 10px; scrollbar-width: none; }
+  .screen::-webkit-scrollbar { display: none; }
+  .screen.active { display: flex; }
+
+  .bottom-nav { background: #fff; border-top: 1px solid #E5DDD4; padding: 7px 0 5px; display: flex; flex-shrink: 0; }
+  .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+  .nav-tab .ti { font-size: 16px; color: #C0BFB8; }
+  .nav-tab .tl { font-size: 8.5px; color: #C0BFB8; font-weight: 500; }
+  .nav-tab.active .ti { color: #1E4D2B; }
+  .nav-tab.active .tl { color: #1E4D2B; font-weight: 700; }
+
+  /* ── HOME ── */
+  .scan-hero { background: linear-gradient(135deg,#1E4D2B,#2D6B3A); border-radius: 14px; padding: 16px; text-align: center; }
+  .scan-hero h2 { color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .scan-hero p { color: rgba(255,255,255,0.65); font-size: 10px; margin-bottom: 12px; }
+  .scan-btn { background: #7FB069; color: #fff; border: none; border-radius: 22px; padding: 8px 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+  .search-box { background: #fff; border: 1.5px solid #E0D8CC; border-radius: 10px; padding: 8px 11px; display: flex; align-items: center; gap: 7px; font-size: 11px; color: #9A9A8A; }
+  .stat-row { display: flex; gap: 8px; }
+  .stat-card { flex: 1; background: #fff; border-radius: 11px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  .stat-card .sn { font-size: 20px; font-weight: 800; color: #1E4D2B; }
+  .stat-card .sl { font-size: 8.5px; color: #8A8A7A; margin-top: 1px; }
+  .sec-hd { font-size: 11px; font-weight: 700; color: #2C3E28; }
+  .recent-item { background: #fff; border-radius: 11px; padding: 9px 11px; display: flex; align-items: center; gap: 9px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
+  .ri-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .ri-info { flex: 1; }
+  .ri-name { font-size: 11px; font-weight: 600; color: #2C3E28; }
+  .ri-cat { font-size: 9.5px; color: #8A8A7A; }
+  .ri-score { font-size: 17px; font-weight: 800; }
+
+  /* ── PRODUCT ── */
+  .prod-header { background: linear-gradient(135deg,#1E4D2B,#2D6B3A); border-radius: 14px; padding: 13px; }
+  .prod-title { color: #fff; font-size: 14px; font-weight: 700; }
+  .prod-brand { color: rgba(255,255,255,0.6); font-size: 10px; margin-top: 1px; }
+  .overall { display: flex; align-items: center; gap: 11px; margin-top: 10px; }
+  .big-circle { width: 54px; height: 54px; background: rgba(255,255,255,0.08); border-radius: 50%; border: 2.5px solid #7FB069; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .big-circle .bn { font-size: 20px; font-weight: 800; color: #7FB069; line-height: 1; }
+  .big-circle .bl { font-size: 7px; color: rgba(255,255,255,0.5); }
+  .score-desc { color: rgba(255,255,255,0.75); font-size: 10px; line-height: 1.5; }
+  .sub-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .ss-card { background: #fff; border-radius: 11px; padding: 9px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .ss-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .ss-name { font-size: 9px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.4px; }
+  .ss-val { font-size: 18px; font-weight: 800; }
+  .bar-bg { background: #F0EEE8; border-radius: 3px; height: 4px; }
+  .bar-fill { border-radius: 3px; height: 4px; }
+  .decision-box { background: #FFF8EC; border-radius: 11px; padding: 10px 11px; border-left: 3px solid #C8943A; }
+  .db-title { font-size: 10px; font-weight: 700; color: #C8943A; margin-bottom: 3px; }
+  .db-text { font-size: 10px; color: #5A5040; line-height: 1.5; }
+  .unknown-box { background: #FFF3F3; border-radius: 10px; padding: 8px 11px; border-left: 3px solid #E85D4A; }
+  .ub-title { font-size: 9.5px; font-weight: 700; color: #E85D4A; margin-bottom: 2px; }
+  .ub-text { font-size: 9.5px; color: #7A5A58; line-height: 1.4; }
+  .alt-btn { background: #1A7A6E; color: #fff; border: none; border-radius: 22px; padding: 9px; font-size: 11px; font-weight: 700; cursor: pointer; width: 100%; }
+
+  /* ── ALTERNATIVES ── */
+  .alt-card { background: #fff; border-radius: 13px; overflow: hidden; box-shadow: 0 2px 7px rgba(0,0,0,0.06); cursor: pointer; }
+  .alt-head { padding: 9px 11px 6px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .alt-tag { font-size: 8.5px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; }
+  .alt-name { font-size: 12px; font-weight: 700; color: #2C3E28; margin-top: 2px; }
+  .alt-brand-sub { font-size: 9.5px; color: #8A8A7A; }
+  .alt-big-score { font-size: 24px; font-weight: 800; }
+  .alt-chips { display: flex; padding: 0 11px 8px; gap: 5px; }
+  .chip { flex: 1; background: #F5F0E8; border-radius: 7px; padding: 4px 3px; text-align: center; }
+  .chip .cv { font-size: 13px; font-weight: 800; }
+  .chip .cl { font-size: 7.5px; color: #8A8A7A; }
+  .alt-price { padding: 5px 11px 9px; font-size: 10px; color: #6A7A68; border-top: 1px solid #F0EDE6; }
+
+  /* ── CARE ── */
+  .care-prod { background: linear-gradient(135deg,#1A7A6E,#1E8C7E); border-radius: 14px; padding: 12px; color: #fff; }
+  .care-prod h3 { font-size: 13px; font-weight: 700; }
+  .care-prod p { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+  .life-bg { background: rgba(255,255,255,0.18); border-radius: 5px; height: 7px; margin-top: 9px; }
+  .life-fill { background: #7FB069; border-radius: 5px; height: 7px; width: 62%; }
+  .life-lbl { display: flex; justify-content: space-between; margin-top: 3px; }
+  .life-lbl span { font-size: 8.5px; opacity: 0.65; }
+  .care-tip { background: #fff; border-radius: 11px; padding: 9px 11px; display: flex; gap: 9px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .tip-ico { font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+  .tip-title { font-size: 11px; font-weight: 700; color: #2C3E28; }
+  .tip-desc { font-size: 9.5px; color: #7A7A6A; margin-top: 2px; line-height: 1.4; }
+  .repair-banner { background: #1E4D2B; border-radius: 11px; padding: 11px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .repair-text { color: #fff; font-size: 11px; font-weight: 600; }
+  .repair-sub { color: rgba(255,255,255,0.6); font-size: 9px; margin-top: 2px; }
+  .repair-btn { background: #7FB069; color: #fff; border: none; border-radius: 18px; padding: 5px 12px; font-size: 9.5px; font-weight: 700; cursor: pointer; }
+
+  /* ── COMMUNITY ── */
+  .event-card { background: linear-gradient(135deg,#4A7C59,#3A6B49); border-radius: 13px; padding: 11px 13px; color: #fff; }
+  .event-tag { font-size: 8.5px; font-weight: 700; background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 5px; }
+  .event-title { font-size: 12px; font-weight: 700; }
+  .event-meta { font-size: 9.5px; opacity: 0.7; margin-top: 2px; }
+  .review-card { background: #fff; border-radius: 13px; padding: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .reviewer { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+  .rev-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .rev-name { font-size: 11px; font-weight: 700; color: #2C3E28; }
+  .rev-meta { font-size: 9px; color: #8A8A7A; }
+  .rev-stars { color: #C8943A; font-size: 10px; margin-left: auto; }
+  .rev-body { font-size: 10px; color: #5A5A4A; line-height: 1.5; }
+  .rev-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .rev-tag { font-size: 8.5px; background: #EEF5EC; color: #3A6B33; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+
+  /* ── IMPACT ── */
+  .impact-hdr { background: linear-gradient(135deg,#1E4D2B,#4A7C59); border-radius: 14px; padding: 13px; text-align: center; }
+  .impact-hdr h3 { color: #fff; font-size: 14px; font-weight: 700; }
+  .impact-hdr p { color: rgba(255,255,255,0.65); font-size: 10px; margin-top: 2px; }
+  .impact-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
+  .i-stat { background: rgba(255,255,255,0.1); border-radius: 9px; padding: 7px; text-align: center; }
+  .i-stat .iv { font-size: 19px; font-weight: 800; color: #7FB069; }
+  .i-stat .il { font-size: 8.5px; color: rgba(255,255,255,0.65); margin-top: 1px; }
+  .owned-item { background: #fff; border-radius: 11px; padding: 8px 11px; display: flex; align-items: center; gap: 9px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .oi-emoji { font-size: 20px; width: 36px; height: 36px; background: #F5F0E8; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+  .oi-name { font-size: 11px; font-weight: 600; color: #2C3E28; }
+  .oi-age { font-size: 9.5px; color: #8A8A7A; }
+  .oi-badge { font-size: 8.5px; font-weight: 700; padding: 3px 7px; border-radius: 20px; margin-left: auto; flex-shrink: 0; }
+  .top-banner { background: #1E4D2B; border-radius: 11px; padding: 11px 13px; text-align: center; }
+  .top-banner .tb-main { color: #7FB069; font-size: 11px; font-weight: 700; }
+  .top-banner .tb-sub { color: rgba(255,255,255,0.6); font-size: 9.5px; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="page-title">🌿 Conscio</div>
+<p class="page-sub">Tap any screen below, or use the phone nav</p>
+
+<div class="screen-nav">
+  <div class="screen-pill active" onclick="goScreen('home',this)">🔍 Home</div>
+  <div class="screen-pill" onclick="goScreen('product',this)">📊 Product Score</div>
+  <div class="screen-pill" onclick="goScreen('alternatives',this)">🔄 Alternatives</div>
+  <div class="screen-pill" onclick="goScreen('care',this)">🛠 Care Hub</div>
+  <div class="screen-pill" onclick="goScreen('community',this)">🤝 Community</div>
+  <div class="screen-pill" onclick="goScreen('impact',this)">🌿 My Impact</div>
+</div>
+
+<div class="phone">
+ <div class="phone-screen">
+  <div class="status-bar"><span>9:41</span><span>▶ ▶ 🔋</span></div>
+  <div class="top-nav">
+    <div class="app-logo">🌿 <em>Conscio</em></div>
+    <span style="color:rgba(255,255,255,0.6);font-size:16px;">🔔</span>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen active" id="s-home">
+    <div class="scan-hero">
+      <h2>What are you using today?</h2>
+      <p>Scan, photograph, or ask about any product</p>
+      <button class="scan-btn" onclick="goScreen('product',null)">📷 Scan Product</button>
+    </div>
+    <div class="search-box">🔍 <span>Search by name, brand, or ingredient…</span></div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="sn">24</div><div class="sl">Scanned</div></div>
+      <div class="stat-card"><div class="sn">3.2kg</div><div class="sl">CO₂ saved</div></div>
+      <div class="stat-card"><div class="sn">£140</div><div class="sl">Saved</div></div>
+    </div>
+    <div class="sec-hd">Recent scans</div>
+    <div class="recent-item" onclick="goScreen('product',null)">
+      <div class="ri-icon" style="background:#EEF5EC;">🧴</div>
+      <div class="ri-info"><div class="ri-name">CeraVe Moisturising Cream</div><div class="ri-cat">Skincare · Beauty</div></div>
+      <div class="ri-score" style="color:#4CAF50;">76</div>
+    </div>
+    <div class="recent-item">
+      <div class="ri-icon" style="background:#FFF3E0;">👟</div>
+      <div class="ri-info"><div class="ri-name">Nike Air Max 90</div><div class="ri-cat">Footwear · Fashion</div></div>
+      <div class="ri-score" style="color:#FF9800;">54</div>
+    </div>
+    <div class="recent-item">
+      <div class="ri-icon" style="background:#E8F5E9;">🫙</div>
+      <div class="ri-info"><div class="ri-name">Clipper Organic Green Tea</div><div class="ri-cat">Food & Drink</div></div>
+      <div class="ri-score" style="color:#4CAF50;">88</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT -->
+  <div class="screen" id="s-product">
+    <div class="prod-header">
+      <div class="prod-title">CeraVe Moisturising Cream</div>
+      <div class="prod-brand">CeraVe · Skincare · 250ml</div>
+      <div class="overall">
+        <div class="big-circle"><div class="bn">76</div><div class="bl">/ 100</div></div>
+        <div class="score-desc">Good overall. Longevity strong. Ethics and planet held back by limited supply chain disclosure.</div>
+      </div>
+    </div>
+    <div class="sub-scores">
+      <div class="ss-card"><div class="ss-head"><span class="ss-name">Health</span><span class="ss-val" style="color:#4CAF50;">82</span></div><div class="bar-bg"><div class="bar-fill" style="width:82%;background:#4CAF50;"></div></div></div>
+      <div class="ss-card"><div class="ss-head"><span class="ss-name">Planet</span><span class="ss-val" style="color:#64B5F6;">68</span></div><div class="bar-bg"><div class="bar-fill" style="width:68%;background:#64B5F6;"></div></div></div>
+      <div class="ss-card"><div class="ss-head"><span class="ss-name">Ethics</span><span class="ss-val" style="color:#FFB74D;">61</span></div><div class="bar-bg"><div class="bar-fill" style="width:61%;background:#FFB74D;"></div></div></div>
+      <div class="ss-card"><div class="ss-head"><span class="ss-name">Longevity</span><span class="ss-val" style="color:#CE93D8;">88</span></div><div class="bar-bg"><div class="bar-fill" style="width:88%;background:#CE93D8;"></div></div></div>
+    </div>
+    <div class="decision-box">
+      <div class="db-title">💡 How we decided this</div>
+      <div class="db-text">Health from EWG Skin Deep — no high-concern ingredients. Ethics lowered: L'Oréal parent has limited fair labour disclosures. Recyclable packaging, no refill programme.</div>
+    </div>
+    <div class="unknown-box">
+      <div class="ub-title">⚠ Unknowns flagged</div>
+      <div class="ub-text">Niacinamide supply chain origin unverified. Carbon footprint not disclosed by manufacturer.</div>
+    </div>
+    <button class="alt-btn" onclick="goScreen('alternatives',null)">🔄 See Conscious Alternatives</button>
+  </div>
+
+  <!-- ALTERNATIVES -->
+  <div class="screen" id="s-alternatives">
+    <div class="sec-hd">Conscious Alternatives</div>
+    <p style="font-size:9.5px;color:#8A8A7A;">Better on Ethics + Planet, without compromising Health</p>
+    <div class="alt-card">
+      <div class="alt-head">
+        <div><span class="alt-tag" style="background:#EEF5EC;color:#2D6B3A;">🏆 Best Overall</span><div class="alt-name">Weleda Skin Food</div><div class="alt-brand-sub">Weleda · Certified Natural · 75ml</div></div>
+        <div class="alt-big-score" style="color:#4CAF50;">89</div>
+      </div>
+      <div class="alt-chips">
+        <div class="chip"><div class="cv" style="color:#4CAF50;">91</div><div class="cl">Health</div></div>
+        <div class="chip"><div class="cv" style="color:#64B5F6;">85</div><div class="cl">Planet</div></div>
+        <div class="chip"><div class="cv" style="color:#FFB74D;">88</div><div class="cl">Ethics</div></div>
+        <div class="chip"><div class="cv" style="color:#CE93D8;">90</div><div class="cl">Life</div></div>
+      </div>
+      <div class="alt-price">💰 £12.99 · Available in marketplace →</div>
+    </div>
+    <div class="alt-card">
+      <div class="alt-head">
+        <div><span class="alt-tag" style="background:#E8F4FF;color:#1565C0;">💧 Budget Pick</span><div class="alt-name">Simple Kind to Skin</div><div class="alt-brand-sub">Simple · Dermatologist tested · 125ml</div></div>
+        <div class="alt-big-score" style="color:#64B5F6;">78</div>
+      </div>
+      <div class="alt-chips">
+        <div class="chip"><div class="cv" style="color:#4CAF50;">80</div><div class="cl">Health</div></div>
+        <div class="chip"><div class="cv" style="color:#64B5F6;">72</div><div class="cl">Planet</div></div>
+        <div class="chip"><div class="cv" style="color:#FFB74D;">79</div><div class="cl">Ethics</div></div>
+        <div class="chip"><div class="cv" style="color:#CE93D8;">82</div><div class="cl">Life</div></div>
+      </div>
+      <div class="alt-price">💰 £5.49 · Lower upfront cost →</div>
+    </div>
+    <div class="alt-card">
+      <div class="alt-head">
+        <div><span class="alt-tag" style="background:#FFF0F5;color:#8E44AD;">⭐ Premium</span><div class="alt-name">Pai Skincare Rosehip</div><div class="alt-brand-sub">Pai · B Corp certified · 30ml</div></div>
+        <div class="alt-big-score" style="color:#FF9800;">93</div>
+      </div>
+      <div class="alt-chips">
+        <div class="chip"><div class="cv" style="color:#4CAF50;">95</div><div class="cl">Health</div></div>
+        <div class="chip"><div class="cv" style="color:#64B5F6;">90</div><div class="cl">Planet</div></div>
+        <div class="chip"><div class="cv" style="color:#FFB74D;">97</div><div class="cl">Ethics</div></div>
+        <div class="chip"><div class="cv" style="color:#CE93D8;">88</div><div class="cl">Life</div></div>
+      </div>
+      <div class="alt-price">💰 £28 · B Corp certified →</div>
+    </div>
+  </div>
+
+  <!-- CARE HUB -->
+  <div class="screen" id="s-care">
+    <div class="care-prod">
+      <h3>Nike Air Max 90 · 2yr 4mo</h3>
+      <p>Added to care log · Last cleaned 6 weeks ago</p>
+      <div class="life-bg"><div class="life-fill"></div></div>
+      <div class="life-lbl"><span>Bought</span><span>62% of expected life</span><span>~5yr avg</span></div>
+    </div>
+    <div class="sec-hd">Care tips</div>
+    <div class="care-tip"><div class="tip-ico">🧽</div><div><div class="tip-title">Clean after wet conditions</div><div class="tip-desc">Mud and salt accelerate sole degradation. Soft brush + warm water within 24hrs.</div></div></div>
+    <div class="care-tip"><div class="tip-ico">🌬️</div><div><div class="tip-title">Air dry only — never tumble dry</div><div class="tip-desc">Heat warps the Air unit. Stuff with newspaper to retain shape while drying.</div></div></div>
+    <div class="care-tip"><div class="tip-ico">📦</div><div><div class="tip-title">Store away from direct sunlight</div><div class="tip-desc">UV causes yellowing. A shoe box or dark shelf extends life by 1–2 years.</div></div></div>
+    <div class="repair-banner">
+      <div><div class="repair-text">⚒ Sole coming loose?</div><div class="repair-sub">2 repair cafés near you · iFixit guide available</div></div>
+      <button class="repair-btn">Repair →</button>
+    </div>
+  </div>
+
+  <!-- COMMUNITY -->
+  <div class="screen" id="s-community">
+    <div class="event-card">
+      <div class="event-tag">📍 Near you</div>
+      <div class="event-title">Hackney Repair Café — Monthly</div>
+      <div class="event-meta">Every 1st Saturday · Free · Bring anything broken</div>
+    </div>
+    <div class="sec-hd">Community reviews</div>
+    <div class="review-card">
+      <div class="reviewer"><div class="rev-avatar" style="background:#1E4D2B;">S</div><div><div class="rev-name">Sarah M.</div><div class="rev-meta">Owned 3 years · Verified</div></div><div class="rev-stars">★★★★★</div></div>
+      <div class="rev-body">"Lasted much longer than expected. I re-soled them at 2 years for £18 and they feel brand new. Packaging is excessive though."</div>
+      <div class="rev-tags"><span class="rev-tag">Repaired ✓</span><span class="rev-tag">3+ years</span><span class="rev-tag">Would re-buy</span></div>
+    </div>
+    <div class="review-card">
+      <div class="reviewer"><div class="rev-avatar" style="background:#1A7A6E;">T</div><div><div class="rev-name">Tom B.</div><div class="rev-meta">Community tip</div></div></div>
+      <div class="rev-body">"Cedar shoe trees make a huge difference — absorb moisture and keep shape. Added about 2 years to my last pair."</div>
+      <div class="rev-tags"><span class="rev-tag">Care tip 💡</span><span class="rev-tag">23 found helpful</span></div>
+    </div>
+    <div class="review-card">
+      <div class="reviewer"><div class="rev-avatar" style="background:#C8943A;">A</div><div><div class="rev-name">Aisha K.</div><div class="rev-meta">Greenwashing alert</div></div><span style="background:#FFF3F3;border-radius:20px;padding:2px 7px;font-size:8.5px;font-weight:700;color:#E85D4A;margin-left:auto;">⚠ Alert</span></div>
+      <div class="rev-body">"Brand claims 'recycled materials' but only the laces are recycled. The upper and sole are virgin synthetic."</div>
+      <div class="rev-tags"><span class="rev-tag" style="background:#FFF3F3;color:#C0392B;">Greenwashing ⚠</span><span class="rev-tag">41 confirmed</span></div>
+    </div>
+  </div>
+
+  <!-- MY IMPACT -->
+  <div class="screen" id="s-impact">
+    <div class="impact-hdr">
+      <h3>Your Conscious Impact</h3>
+      <p>Since joining Conscio · 8 months</p>
+      <div class="impact-stats">
+        <div class="i-stat"><div class="iv">24</div><div class="il">Products logged</div></div>
+        <div class="i-stat"><div class="iv">3.2kg</div><div class="il">CO₂ avoided</div></div>
+        <div class="i-stat"><div class="iv">£140</div><div class="il">Saved vs replacing</div></div>
+        <div class="i-stat"><div class="iv">6</div><div class="il">Items repaired</div></div>
+      </div>
+    </div>
+    <div class="sec-hd">My ownership log</div>
+    <div class="owned-item"><div class="oi-emoji">👟</div><div><div class="oi-name">Nike Air Max 90</div><div class="oi-age">2yr 4mo · Repaired once</div></div><span class="oi-badge" style="background:#EEF5EC;color:#2D6B3A;">Well kept ✓</span></div>
+    <div class="owned-item"><div class="oi-emoji">🧥</div><div><div class="oi-name">Patagonia Fleece</div><div class="oi-age">4yr · Never repaired</div></div><span class="oi-badge" style="background:#EEF5EC;color:#2D6B3A;">Excellent ✓</span></div>
+    <div class="owned-item"><div class="oi-emoji">💻</div><div><div class="oi-name">MacBook Pro 14"</div><div class="oi-age">1yr 8mo · Battery 92%</div></div><span class="oi-badge" style="background:#FFF8EC;color:#C8943A;">Tip available</span></div>
+    <div class="owned-item"><div class="oi-emoji">🪴</div><div><div class="oi-name">Le Creuset Cast Iron</div><div class="oi-age">6yr · Re-seasoned twice</div></div><span class="oi-badge" style="background:#EEF5EC;color:#2D6B3A;">Lifetime piece ✓</span></div>
+    <div class="top-banner"><div class="tb-main">🌿 You're in the top 15% of conscious consumers</div><div class="tb-sub">Keep going — every scan helps.</div></div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-tab active" id="t-home" onclick="tabClick('home')"><div class="ti">🔍</div><div class="tl">Scan</div></div>
+    <div class="nav-tab" id="t-care" onclick="tabClick('care')"><div class="ti">🛠</div><div class="tl">Care</div></div>
+    <div class="nav-tab" id="t-community" onclick="tabClick('community')"><div class="ti">🤝</div><div class="tl">Community</div></div>
+    <div class="nav-tab" id="t-impact" onclick="tabClick('impact')"><div class="ti">🌿</div><div class="tl">Impact</div></div>
+  </div>
+ </div>
+</div>
+
+<p style="margin-top:14px;font-size:10.5px;color:#7A9E7E;text-align:center;">Click pills above or tap "Scan Product" / "See Alternatives" for the full product flow</p>
+
+<script>
+const tabMap = { home:'home', care:'care', community:'community', impact:'impact' };
+const pillMap = { home:0, product:1, alternatives:2, care:3, community:4, impact:5 };
+
+function goScreen(name, pillEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + name).classList.add('active');
+  document.querySelectorAll('.screen-pill').forEach(p => p.classList.remove('active'));
+  if (pillEl) { pillEl.classList.add('active'); }
+  else {
+    const idx = pillMap[name];
+    if (idx !== undefined) document.querySelectorAll('.screen-pill')[idx].classList.add('active');
+  }
+  // Sync bottom tabs
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const tabId = tabMap[name] || (name === 'product' || name === 'alternatives' ? 'home' : null);
+  if (tabId) document.getElementById('t-' + tabId).classList.add('active');
+}
+function tabClick(name) {
+  const pillIdx = pillMap[name];
+  const pill = document.querySelectorAll('.screen-pill')[pillIdx];
+  goScreen(name, pill);
+}
+</script>
+</body>
+</html>
