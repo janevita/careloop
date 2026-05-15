@@ -166,6 +166,11 @@
     .step-title { font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
     .step-desc { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.6; }
     .step-connector { display: none; }
+    .step-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .step-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    .ownership-log { margin-top: 32px; background: rgba(127,176,105,0.08); border: 1px solid rgba(127,176,105,0.2); border-left: 3px solid var(--sage); border-radius: var(--radius); padding: 24px 28px; }
+    .ownership-log-title { font-size: 16px; font-weight: 700; color: var(--sage); margin-bottom: 10px; }
+    .ownership-log p { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7; margin: 0; }
     @media (min-width: 768px) {
       .steps { flex-direction: row; align-items: stretch; gap: 0; }
       .step { border-radius: 0; border-right: none; }
@@ -244,8 +249,8 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-badge"><div class="hero-badge-dot"></div>Coming soon — be the first to know</div>
-    <h1>Know what you own.<br><em>Own what you know.</em></h1>
-    <p class="hero-sub">Scan any product — food, beauty, clothing, electronics — and instantly see how it scores across health, planet, ethics, and longevity.</p>
+    <h1>Don't just buy better.<br><em>Own better.</em></h1>
+    <p class="hero-sub">CareLoop is the intelligent ownership companion that keeps products in circulation longer — from the first scan all the way to responsible end-of-life. Use longer. Waste less.</p>
     <form class="hero-form" onsubmit="handleSignup(event,'hero')" novalidate>
       <input type="text" placeholder="Your name" id="hero-name">
       <input type="email" placeholder="Your email address" id="hero-email" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
@@ -395,48 +400,60 @@
   <!-- HOW IT WORKS -->
   <section class="how">
     <div class="section-label">How it works</div>
-    <h2 class="section-title reveal">Three steps to consuming consciously.</h2>
-    <p class="section-sub reveal">No research. No greenwashing. Just honest scores and better choices.</p>
+    <h2 class="section-title reveal">The full ownership loop, in five steps.</h2>
+    <p class="section-sub reveal">No research. No greenwashing. Just honest scores and smarter decisions — before, during, and after you buy.</p>
     <div class="steps">
       <div class="step reveal">
         <div class="step-num">1</div>
-        <div class="step-title">Scan anything</div>
-        <div class="step-desc">Point your camera at a barcode, photograph a label, or just ask a question. Care Loop understands any product in seconds.</div>
+        <div class="step-title">Scan or Ask</div>
+        <div class="step-desc">Barcode, photo, or plain text question. Care Loop resolves any product to its Conscious Index in seconds.</div>
       </div>
-      <div class="step-connector">→</div>
       <div class="step reveal">
         <div class="step-num">2</div>
-        <div class="step-title">Get the score</div>
-        <div class="step-desc">Your Conscious Index breaks the product down across Health, Planet, Ethics, and Longevity — with full transparency on how we decided, and what we couldn't verify.</div>
+        <div class="step-title">Get the Score</div>
+        <div class="step-desc">Health, Planet, Ethics, Longevity — four sub-scores in one view, with full reasoning and flagged unknowns.</div>
       </div>
-      <div class="step-connector">→</div>
       <div class="step reveal">
         <div class="step-num">3</div>
-        <div class="step-title">Act on it</div>
-        <div class="step-desc">Compare honest alternatives, add the product to your care log, get tips to make it last longer, and find the right way to repair or responsibly let it go.</div>
+        <div class="step-title">Decide Better</div>
+        <div class="step-desc">Compare honest alternatives and read community reviews from real owners — not sponsored rankings.</div>
       </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <div class="step-title">Use Fully</div>
+        <div class="step-desc">Care guides, repair pathways, and maintenance reminders keep what you own working longer.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">5</div>
+        <div class="step-title">Dispose Right</div>
+        <div class="step-desc">Location-aware end-of-life routing: repair → sell → donate → recycle. In that order.</div>
+      </div>
+    </div>
+    <div class="ownership-log reveal">
+      <div class="ownership-log-title">📋 The Ownership Log</div>
+      <p>Every scanned product is saved to your personal log — building a care history that grows in value over time. When it's time to sell or donate, the full log travels with the item, increasing trust and resale value.</p>
     </div>
   </section>
 
   <!-- FEATURES -->
   <section class="features">
     <div class="section-label reveal">What you get</div>
-    <h2 class="section-title reveal">Everything you need to consume with intention.</h2>
+    <h2 class="section-title reveal">Lifecycle intelligence — built into everything you own.</h2>
     <div class="features-grid">
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#EEF5EC;">🔍</div><div class="feature-title">The Conscious Index</div><div class="feature-desc">Four scores — Health, Planet, Ethics, Longevity — unified in one view, with clear reasoning and flagged unknowns. We never hide what we don't know.</div></div>
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#E8F4FF;">🔄</div><div class="feature-title">Conscious Alternatives</div><div class="feature-desc">Every product comes with better options across a range of prices. Compare trade-offs side by side — not just rankings, but reasons.</div></div>
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#E8F5E9;">🛠</div><div class="feature-title">Care & Longevity Hub</div><div class="feature-desc">Personalised care guides, repair pathways, and maintenance reminders for everything you own. The app that helps you use things fully.</div></div>
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#FFF3E0;">♻️</div><div class="feature-title">Responsible Disposal</div><div class="feature-desc">When you're done, we find the best outcome: repair, sell, donate, recycle — in that order. Location-aware, step-by-step guidance.</div></div>
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#F3E8FF;">🤝</div><div class="feature-title">Community Wisdom</div><div class="feature-desc">Real reviews structured around ownership, not just satisfaction. Local repair events and crowdsourced greenwashing alerts.</div></div>
-      <div class="feature-card reveal"><div class="feature-icon" style="background:#FFF8EC;">🌿</div><div class="feature-title">My Impact</div><div class="feature-desc">A personal log of every conscious choice — products owned, CO₂ saved, money not wasted on premature replacements. Progress you can see.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#EEF5EC;">🔍</div><div class="feature-title">The Conscious Index</div><div class="feature-desc">Four scores — Health, Planet, Ethics, Longevity — with transparent reasoning and flagged unknowns. Not a black-box rating. A full explanation of every signal we used and everything we couldn't verify.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#FFF8EC;">📋</div><div class="feature-title">The Ownership Log</div><div class="feature-desc">Every product you scan is saved with its full care history — building a lifecycle record that grows in value over time. When you sell or donate, the log travels with the item.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#E8F5E9;">🛠</div><div class="feature-title">Care & Longevity Hub</div><div class="feature-desc">Personalised care guides, repair pathways, and maintenance reminders tailored to what you own. The only app that helps you keep things working — not just buy new ones.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#FFF3E0;">♻️</div><div class="feature-title">Responsible End-of-Life</div><div class="feature-desc">Location-aware routing when you're done: repair → sell → donate → recycle, in that order. Step-by-step guidance so nothing ends up in landfill unnecessarily.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#E8F4FF;">🛒</div><div class="feature-title">Conscious Marketplace</div><div class="feature-desc">Ethical alternatives at every price point. When you're ready to move on, your care log auto-fills your resale listing — giving the next owner full product history and trust.</div></div>
+      <div class="feature-card reveal"><div class="feature-icon" style="background:#F3E8FF;">🤝</div><div class="feature-title">Community & Repair Layer</div><div class="feature-desc">Structured ownership reviews, crowdsourced greenwashing alerts, local repair shops, and swap events. Intelligence that gets smarter with every product that enters the loop.</div></div>
     </div>
   </section>
 
   <!-- SIGNUP -->
   <section class="signup" id="signup">
     <div class="signup-count reveal"><span>🌱</span> Join the early access list</div>
-    <h2 class="section-title reveal">Be the first to use Care Loop.</h2>
-    <p class="section-sub reveal">We're building in the open and launching soon. Sign up and we'll reach out before anyone else.</p>
+    <h2 class="section-title reveal">Help build the future of ownership.</h2>
+    <p class="section-sub reveal">We're building the consumer interface for circular products. Sign up for early access and we'll bring you in before anyone else.</p>
     <form class="signup-form reveal" onsubmit="handleSignup(event,'bottom')" novalidate>
       <input type="text" placeholder="Your name" id="bottom-name">
       <input type="email" placeholder="Email address" id="bottom-email" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
